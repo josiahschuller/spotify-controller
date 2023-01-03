@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(255, 192, 205);
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+* {
+    font-family: Helvetica
+}
