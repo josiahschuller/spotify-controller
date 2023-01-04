@@ -1,7 +1,6 @@
 const CLIENT_ID = "f7893b6abe0d4475ae601778a41d0142";
 const CLIENT_SECRET = "a475a2c604b34f1eba4a98076bc2a371";
 const REDIRECT_URI = 'http://localhost:8888/callback';
-// const AUTH = "Bearer BQDv__MKszwQStQRJGKKZJIs6dQSipT2zwQP3WUVLCqrgFxb37e-eacOLaqer1H0K533_pYav4JZ3_ivUcUD6RPHsuCEFmj2vzojhVFMHsWU7AS64W0JykE7VOkx5-IzSP8qZR4FI9xUtWaG6yaTZmxMeR-DhOAlwpi1a84adPBjgxHmb_AmyVHBKx3QqVSTFH7nRggB8BAryOnchPaaHf6RScO5W2d_6sF7dQ1LbOdaJL8upagqmUyoc7hnr_An1bKuxRzEYJKmrpPXTbLwqYNc7CatquKZUBEjPCwevTPpORJtD7m4d3BiZk88JLGBfXXMVA";
 
 // I got the refresh token from here: https://alecchen.dev/spotify-refresh-token/
 const REFRESH_TOKEN = "AQAnyu_nT0-Sxc07nxqacBha_VQEoxcSq-CvBarH8MBxiMLTNCrQYqFcEjwlac7eBNw2zmBHIRBOf8B9Ny893sartlF1ssprQ8x8QTUfMjwChPzSSI310T23v336d-DexOw8Q2XkI0oXlz7HXoiz8rqBhld00oqomr5lbrQQphP1Y_VgWOBL8715EAtKd9u3QwY5myDL0ZAD_rI-Rmvzer6y5EG6r4aoxedXtP_AG6cu14GpsD39fW8yy3MJ7ZjhkPmJ0if3_-WhJLWFJ8KGsmjA1EDaRVfk3uGMInxqG9EcsT-YT1UA-G5itT56jxsaUOARgy2-3RFVTjMGo75_UIZ4YRT9AR1vKPp4eCCYbYj_J1Y6Ol9kyCtXssBh1kDnoPC5K3W5fEs7HjWTMFEAsRgaSgsLc69AZ4OiYSrhJExEkp2-QHGPQqxKyOuXxTIU8EZM-Pjbd-aaPC0S11DdVziTZtS1p67_IEAMVw1Oefo60ECrYHUBBX7xDIKUn50sm_4kOXB0ubZK8KONqh7XWsYHJb4IPRFVn92fN04x64kdaDcYMOY_El_oQ1vI6ndBFHm0KBo0xyI8mvvnvnv811Ug87WQjus_zkUm89Mn4DSZpEVUah3RePQW3iiNoZg0Q8mhSqJmD0YpWqKPRxelhMyy8FYLP1y18mIMRj5btUxOnzUkl7iaQftEicggOvqL66WxDSRf3Lk4VejE6pNJIdcL4OICi7mST40vxMXwDY8";
@@ -97,7 +96,7 @@ async function search(query, auth, type="track") {
     - query (String): the search query
     - auth (String): the access token
     - type (String): the type of item
-    Output: ?
+    Output: Object of data returned from API
     */
     let url = `https://api.spotify.com/v1/search?q=${query}&type=${type}&include_external=audio`;
     
@@ -107,11 +106,9 @@ async function search(query, auth, type="track") {
         "Authorization": auth
     };
     let output;
-    await getRequest(url, headers).then((data) => {
-        let outputRef = document.getElementById("output");
-        outputRef.innerText = data;
-        // console.log(data);
-        output = data;
-    });
+    await getRequest(url, headers)
+        .then((data) => {
+            output = data;
+        });
     return output;
 }

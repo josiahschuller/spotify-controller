@@ -1,4 +1,6 @@
 
+const HASHED_PASS = -2354572330;
+
 function convertItemsToHTML(items) {
     /*
     Converts an object of items to HTML
@@ -20,17 +22,59 @@ function convertItemsToHTML(items) {
 }
 
 async function onSearch() {
+    /*
+    This function is called when the Search button is pressed.
+    */
     // Get a new access token
     let token = await refreshAccessToken(REFRESH_TOKEN);
     console.log(token);
 
     // Execute the search
-    let songRef = document.getElementById("searchBox");
-    let searchQuery = songRef.value;
-    let searchOutput = await search(searchQuery, token);
-    console.log(searchOutput);
+    let textBoxRef = document.getElementById("textBox");
+    let searchQuery = textBoxRef.value;
+    if (searchQuery !== ""){
+        let searchOutput = await search(searchQuery, token);
+        console.log(searchOutput);
 
-    // Display the results in the HTML
+        // Display the results in the HTML
+        let outputRef = document.getElementById("output");
+        outputRef.innerHTML = convertItemsToHTML(searchOutput);
+    }
+
+}
+
+function generateHash(text) {
+    /*
+    Hashes the given text using SHA256 hash function.
+    Inputs:
+    - text (String): text to be hashed
+    Output: Number of a reduced value of the hash.
+    */
+    let hash = CryptoJS.SHA256(text);
+    let reducedHash = hash.words.reduce((x, y) => x + y, 0);
+    return reducedHash;
+}
+
+function onLogin() {
+    /*
+    This function is called when the Login button is pressed.
+    */
+    let textBoxRef = document.getElementById("textBox");
+    let textBoxLabelRef = document.getElementById("textBoxLabel");
+    let buttonRef = document.getElementById("button");
     let outputRef = document.getElementById("output");
-    outputRef.innerHTML = convertItemsToHTML(searchOutput);
+    
+    // Authenticate password
+    let authentication = generateHash(textBoxRef.value) === HASHED_PASS;
+
+    if (authentication) {
+        // If authenticated, then change to proper app
+        textBoxRef.value = "";
+        textBoxLabelRef.innerText = "Song";
+        buttonRef.innerText = "Search";
+        buttonRef.onclick = onSearch;
+        outputRef.innerText = "";
+    } else {
+        outputRef.innerText = "Incorrect password";
+    }
 }
