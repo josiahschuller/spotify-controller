@@ -48,10 +48,11 @@ async function refreshAccessToken(refresh_token) {
     Output: String of new access token
     */
     let url = "https://accounts.spotify.com/api/token";
-    // https://www.base64encode.org/ is used to encode <client_id:client_secret>
-    // If Client ID or Client Secret changes, this needs to be regenerated.
+
+    // Encode <client_id:client_secret> into Base64
+    let base64 = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(`${CLIENT_ID}:${CLIENT_SECRET}`));
     let headers = {
-        "Authorization": "Basic " + "Zjc4OTNiNmFiZTBkNDQ3NWFlNjAxNzc4YTQxZDAxNDI6YTQ3NWEyYzYwNGIzNGYxZWJhNGE5ODA3NmJjMmEzNzE=",
+        "Authorization": "Basic " + base64,
         "Content-Type": "application/x-www-form-urlencoded"
     };
 
@@ -79,11 +80,6 @@ async function getRequest(url, headers=null) {
     Output: object of data sent back
     */
     let response = await fetch(url, {headers: headers});
-    // if (headers === null) {
-    //     response = await fetch(url, {mode:"no-cors"});
-    // } else {
-    //     response = await fetch(url, {headers: headers, mode:"no-cors"});
-    // }
 
     let data = await response.json();
     return data;

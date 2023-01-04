@@ -1,5 +1,5 @@
 
-const HASHED_PASS = -2354572330;
+const HASHED_PASS = "YL1lGNH2jaDFVAPTNXp8Z/yoXpu/5xsbwrHASsbkZuQ=";
 
 function convertItemsToHTML(items) {
     /*
@@ -48,11 +48,11 @@ function generateHash(text) {
     Hashes the given text using SHA256 hash function.
     Inputs:
     - text (String): text to be hashed
-    Output: Number of a reduced value of the hash.
+    Output: String of a Base64 encoded value of the hash.
     */
     let hash = CryptoJS.SHA256(text);
-    let reducedHash = hash.words.reduce((x, y) => x + y, 0);
-    return reducedHash;
+    let hashString = hash.toString(CryptoJS.enc.Base64);
+    return hashString;
 }
 
 function onLogin() {
