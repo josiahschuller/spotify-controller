@@ -1,12 +1,3 @@
-const CLIENT_ID = "f7893b6abe0d4475ae601778a41d0142";
-const CLIENT_SECRET = "a475a2c604b34f1eba4a98076bc2a371";
-const REDIRECT_URI = 'http://localhost:8888/callback';
-
-// I got the refresh token from here: https://alecchen.dev/spotify-refresh-token/
-const REFRESH_TOKEN = "AQAnyu_nT0-Sxc07nxqacBha_VQEoxcSq-CvBarH8MBxiMLTNCrQYqFcEjwlac7eBNw2zmBHIRBOf8B9Ny893sartlF1ssprQ8x8QTUfMjwChPzSSI310T23v336d-DexOw8Q2XkI0oXlz7HXoiz8rqBhld00oqomr5lbrQQphP1Y_VgWOBL8715EAtKd9u3QwY5myDL0ZAD_rI-Rmvzer6y5EG6r4aoxedXtP_AG6cu14GpsD39fW8yy3MJ7ZjhkPmJ0if3_-WhJLWFJ8KGsmjA1EDaRVfk3uGMInxqG9EcsT-YT1UA-G5itT56jxsaUOARgy2-3RFVTjMGo75_UIZ4YRT9AR1vKPp4eCCYbYj_J1Y6Ol9kyCtXssBh1kDnoPC5K3W5fEs7HjWTMFEAsRgaSgsLc69AZ4OiYSrhJExEkp2-QHGPQqxKyOuXxTIU8EZM-Pjbd-aaPC0S11DdVziTZtS1p67_IEAMVw1Oefo60ECrYHUBBX7xDIKUn50sm_4kOXB0ubZK8KONqh7XWsYHJb4IPRFVn92fN04x64kdaDcYMOY_El_oQ1vI6ndBFHm0KBo0xyI8mvvnvnv811Ug87WQjus_zkUm89Mn4DSZpEVUah3RePQW3iiNoZg0Q8mhSqJmD0YpWqKPRxelhMyy8FYLP1y18mIMRj5btUxOnzUkl7iaQftEicggOvqL66WxDSRf3Lk4VejE6pNJIdcL4OICi7mST40vxMXwDY8";
-
-let auth_token = "";
-
 
 // async function authorise() {
 //     // Doesn't work
@@ -40,17 +31,19 @@ let auth_token = "";
 //     return data;
 // }
 
-async function refreshAccessToken(refresh_token) {
+async function refreshAccessToken(refresh_token, client_id, client_secret) {
     /*
     Requests for a new access token
     Inputs:
     - refresh_token (String): Refresh token used to refresh
+    - client_id (String): Client ID of Spotify user
+    - client_secret (String): Client Secret of Spotify user
     Output: String of new access token
     */
     let url = "https://accounts.spotify.com/api/token";
 
     // Encode <client_id:client_secret> into Base64
-    let base64 = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(`${CLIENT_ID}:${CLIENT_SECRET}`));
+    let base64 = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(`${client_id}:${client_secret}`));
     let headers = {
         "Authorization": "Basic " + base64,
         "Content-Type": "application/x-www-form-urlencoded"
