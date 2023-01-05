@@ -33,7 +33,7 @@ function convertItemsToHTML(items) {
     return output;
 }
 
-async function onSearch() {
+async function search() {
     /*
     This function is called when the Search button is pressed.
     */
@@ -51,10 +51,9 @@ async function onSearch() {
         let outputRef = document.getElementById("output");
         outputRef.innerHTML = convertItemsToHTML(searchOutput);
     }
-
 }
 
-function onLogin() {
+function login() {
     /*
     This function is called when the Login button is pressed.
     */
@@ -62,6 +61,7 @@ function onLogin() {
     let textBoxLabelRef = document.getElementById("textBoxLabel");
     let buttonRef = document.getElementById("button");
     let outputRef = document.getElementById("output");
+    let formRef = document.getElementById("form");
     
     // Authenticate password
     let passwordGuess = textBoxRef.value;
@@ -72,7 +72,6 @@ function onLogin() {
         textBoxRef.value = "";
         textBoxLabelRef.innerText = "Song";
         buttonRef.innerText = "Search";
-        buttonRef.onclick = onSearch;
         outputRef.innerText = "";
         
         // Use the password as the key for AES encryption/decryption
@@ -85,5 +84,15 @@ function onLogin() {
     } else {
         // Incorrect password guess
         outputRef.innerText = "Incorrect password";
+    }
+}
+
+async function onFormSubmission() {
+    if (generateHash(aesKey) === HASHED_PASS) {
+        // Logged in
+        await search();
+    } else {
+        // Not logged in
+        login();
     }
 }

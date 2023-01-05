@@ -14,14 +14,14 @@
 				<h2>Spotify Controller</h2>
 				
 				<!-- Textfield with Floating Label -->
-				<form action="#">
+				<form id="form" onsubmit="onFormSubmission(); return false;">
 					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 						<input class="mdl-textfield__input" type="text" id="textBox">
 						<label class="mdl-textfield__label" for="textBox" id="textBoxLabel">Password</label>
 					</div>
 
 					<!-- Accent-colored raised button with ripple -->
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="button" onclick="onLogin()">
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="button">
 						Login
 					</button>
 				</form>
