@@ -78,7 +78,7 @@ async function getRequest(url, headers=null) {
     return data;
 }
 
-async function search(query, auth, type="track") {
+async function searchSpotify(query, auth, type="track") {
     /*
     Searches for an item with the Spotify API
     Inputs:

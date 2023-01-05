@@ -37,14 +37,14 @@ async function search() {
     /*
     This function is called when the Search button is pressed.
     */
-    // Get a new access token
-    let token = await refreshAccessToken(refresh_token, client_id, client_secret);
-
-    // Execute the search
     let textBoxRef = document.getElementById("textBox");
     let searchQuery = textBoxRef.value;
     if (searchQuery !== ""){
-        let searchOutput = await search(searchQuery, token);
+        // Get a new access token
+        let token = await refreshAccessToken(refresh_token, client_id, client_secret);
+        
+        // Execute the search
+        let searchOutput = await searchSpotify(searchQuery, token);
         console.log(searchOutput);
 
         // Display the results in the HTML

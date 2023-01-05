@@ -2,11 +2,13 @@
 
 Goal: Control my Spotify through a website.
 
-Dependencies:
-- bower:
+The site can be found [here](https://josiahschuller.github.io/spotify-controller/).
+
+To run the code locally:
+1. Install dependencies
 
     `npm install -g bower`
-
-- crypto-js:
     
     `bower install crypto-js`
+
+2. Open `index.html`
