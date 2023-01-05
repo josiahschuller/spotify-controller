@@ -107,6 +107,6 @@ async function josiahLogin() {
         await setLocalStorage(client_id, client_secret);
     } else {
         // Incorrect password
-        outputRef.innerText = "Incorrect password";
+        displayToast("Incorrect password");
     }
 }

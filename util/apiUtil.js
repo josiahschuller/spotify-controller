@@ -1,4 +1,14 @@
 
+function displayToast(text) {
+    /*
+    Displays text in a toast
+    Inputs:
+    - text (String): text to be displayed
+    */
+    let toast = document.getElementById("toast");
+    toast.MaterialSnackbar.showSnackbar({message: text});
+}
+
 function getUrlFromPage(currentUrl, page, delimiter='/') {
     /*
     Finds the URL of the given page

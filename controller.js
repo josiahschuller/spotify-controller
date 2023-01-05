@@ -9,6 +9,7 @@ async function convertItemsToHTML(items, auth) {
     */
     let types = ["tracks"]; // Update this when the scope of types is increased
     let output = ""
+    let device_id = await getDeviceId(auth); // Get ID of active device
     for (let type in types) {
         for (let itemIndex in items[types[type]]["items"]) {
             // Extract information from object
@@ -19,7 +20,6 @@ async function convertItemsToHTML(items, auth) {
 
             // Setup information for adding song to queue
             let song_uri = item["uri"];
-            let device_id = await getDeviceId(auth);
 
             // Construct HTML output
             output += `
@@ -47,11 +47,11 @@ async function addToQueueWrapper(songUri, device_id, auth) {
     // Check if a device is active
     if (device_id != null && device_id != "null") {
         // A device is active
-        console.log("Song added to queue");
+        displayToast("Song added to queue");
         await addToQueue(songUri, device_id, auth);
     } else {
         // No devices are active
-        console.log("No devices available");
+        displayToast("No devices playing at the moment");
     }
 }
 
