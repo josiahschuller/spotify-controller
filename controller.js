@@ -43,3 +43,11 @@ async function search() {
         outputRef.innerHTML = convertItemsToHTML(searchOutput);
     }
 }
+
+function logOut() {
+    // Clear local storage
+    localStorage.clear();
+
+    // Redirect back to login page
+    window.location.href = "index.html";
+}

@@ -2,10 +2,17 @@ body {
     background-color: rgb(255, 192, 205);
 }
 
-.center {
+.main {
     margin: auto;
-    width: 30%;
+    max-width: 1000px;
     padding: 10px;
+    text-align: center;
+}
+
+.oneline {
+    display: inline-block;
+    text-align: center;
+    margin: 1%;
 }
 
 * {
