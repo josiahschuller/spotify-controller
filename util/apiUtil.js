@@ -1,16 +1,18 @@
 
-function getUrlFromPage(currentUrl, page) {
+function getUrlFromPage(currentUrl, page, delimiter='/') {
     /*
     Finds the URL of the given page
     Inputs:
-    - currentUrl: URL of page currently open
-    - page: path to HTML file (which a URL is being found for)
+    - currentUrl (String): URL of page currently open
+    - page (String): path to HTML file (which a URL is being found for)
+    - delimiter (String): separator between base of URL and page
     */
     let output;
-    for (let i = currentUrl.length-1; i >= 0; i--) {
-        if (currentUrl[i] === '/') {
-            // Stop after finding the last '/' in the URL
+    for (let i = currentUrl.length-delimiter.length-1; i >= 0; i--) {
+        if (currentUrl.substring(i, i+delimiter.length) === delimiter) {
+            // Stop after finding the last delimiter in the URL
             output = currentUrl.substring(0, i+1);
+            console.log(output);
             break;
         }
     }
@@ -23,7 +25,7 @@ async function authorise(client_id, uri) {
     /*
     Authorises user for log-in
     */
-    let scope = 'user-read-private user-read-email';
+    let scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming';
 
     let url = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${scope}&redirect_uri=${uri}&show_dialog=true`
     

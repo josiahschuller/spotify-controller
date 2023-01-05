@@ -18,11 +18,12 @@ async function onPageLoad() {
         let code = urlParams.get("code");
 
         // Clear URL
-        window.history.pushState("", "", "/index.html");
+        window.history.pushState("", "", getUrlFromPage(window.location.href, "controller.html", "/index.html?code="));
         let redirect_uri = window.location.href;
 
         // Get tokens
         let tokens = await getTokens(code, client_id, client_secret, redirect_uri);
+        console.log(tokens);
 
         // Save tokens to local storage
         if (tokens["access_token"] != undefined){
@@ -33,7 +34,7 @@ async function onPageLoad() {
         }
 
         // Redirect to controller page
-    window.location.href = getUrlFromPage(window.location.href, "controller.html");
+        window.location.href = getUrlFromPage(window.location.href, "controller.html");
     }
 }
 

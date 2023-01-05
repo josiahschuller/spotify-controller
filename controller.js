@@ -30,7 +30,21 @@ async function search() {
         let access_token = localStorage.getItem("access_token");
         
         // Execute the search
-        let searchOutput = await searchSpotify(searchQuery, access_token);
+        let searchOutput;
+        try {
+            searchOutput = await searchSpotify(searchQuery, access_token);
+        } catch {
+            // If request fails, renew access token
+            let refresh_token = localStorage.getItem("refresh_token");
+            let client_id = localStorage.getItem("client_id");
+            let client_secret = localStorage.getItem("client_secret");
+
+            access_token = getNewAccessToken(refresh_token, client_id, client_secret)
+            localStorage.setItem("access_token", access_token);
+
+            // Try again
+            searchOutput = await searchSpotify(searchQuery, access_token);
+        }
         console.log(searchOutput);
 
         // Display the results in the HTML
