@@ -204,3 +204,26 @@ async function addToQueue(songUri, device_id, auth) {
 
     console.log(data);
 }
+
+async function getPlaybackInformation(auth, market) {
+    /*
+    Gets information about the current playback state
+    Inputs:
+    - auth (String): access token
+    - market (String): ISO 3166-1 alpha-2 country code
+    Output: ?
+    */
+    let url = `https://api.spotify.com/v1/me/player?market=${market}`;
+    
+    let headers = {
+        "Authorization": "Bearer " + auth,
+        "Content-Type": "application/json"
+    }
+    let response = await fetch(url, {
+        headers: headers,
+        method: "GET"
+    });
+
+    let data = await response.json();
+    return data;
+}

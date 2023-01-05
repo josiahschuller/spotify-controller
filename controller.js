@@ -1,4 +1,17 @@
 
+function extractSongInfo(song) {
+    /*
+    Gets key information from item object about a song
+    Inputs:
+    - song (Object): information of item from Spotify API
+    Output: String of key information about song
+    */
+    let name = song["name"];
+    let artists = song["artists"].map(artist => artist["name"]).join(", ");
+    let duration = convertMsToTime(song["duration_ms"]);
+    return `${name}, by ${artists} (${duration})`;
+}
+
 async function convertItemsToHTML(items) {
     /*
     Converts an object of items to HTML
@@ -12,9 +25,6 @@ async function convertItemsToHTML(items) {
         for (let itemIndex in items[types[type]]["items"]) {
             // Extract information from object
             let item = items[types[type]]["items"][itemIndex];
-            let name = item["name"];
-            let artists = item["artists"].map(artist => artist["name"]).join(", ");
-            let duration = convertMsToTime(item["duration_ms"]);
 
             // Setup information for adding song to queue
             let song_uri = item["uri"];
@@ -24,7 +34,7 @@ async function convertItemsToHTML(items) {
             <a href="javascript:addToQueueWrapper('${song_uri}')">
             <div class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
-                    <span>${name}, by ${artists} (${duration})</span>
+                    <span>${extractSongInfo(item)}</span>
                 </span>
                 <i class="material-icons">add</i>
             </div>
@@ -93,4 +103,32 @@ function logOut() {
 
     // Redirect back to login page
     window.location.href = getUrlFromPage(window.location.href, "index.html");
+}
+
+async function displayCurrentPlayback() {
+    /*
+    Displays the current playback state in the HTML
+    */
+    let auth = localStorage.getItem("access_token");
+    let market = "AU";
+
+    let output = "";
+
+    let stateData;
+    try {
+        // Device is playing
+        stateData = await getPlaybackInformation(auth, market);
+        if (stateData["is_playing"]) {
+            // Extract information from object
+            output = `Currently playing: ${extractSongInfo(stateData["item"])}`;
+        } else {
+            output = "No song is currently being played. Come back later.";
+        }
+    } catch {
+        // No device is playing
+        stateData = {}
+        output = "No song is currently being played. Come back later.";
+    }
+    console.log(stateData);
+    document.getElementById("control").innerHTML = `<p>${output}</p>`;
 }
