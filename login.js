@@ -33,8 +33,7 @@ async function onPageLoad() {
         }
 
         // Redirect to controller page
-        window.history.pushState("", "", "/controller.html");
-        window.location.href = window.location.href;
+    window.location.href = getUrlFromPage(window.location.href, "controller.html");
     }
 }
 
@@ -65,8 +64,7 @@ async function setLocalStorage(client_id, client_secret) {
         localStorage.setItem("access_token", access_token);
 
         // Redirect to controller page
-        window.history.pushState("", "", "/controller.html");
-        window.location.href = window.location.href;
+        window.location.href = getUrlFromPage(window.location.href, "controller.html");
     } else {
         // No refresh token, so authorization is required
         let redirect_uri = window.location.href;

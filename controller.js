@@ -1,11 +1,4 @@
 
-// Global variables
-let g_redirect_uri = window.location.href;
-let g_client_id = "";
-let g_client_secret = "";
-let g_refresh_token = "";
-let g_access_token = "";
-
 function convertItemsToHTML(items) {
     /*
     Converts an object of items to HTML
@@ -33,9 +26,11 @@ async function search() {
     let textBoxRef = document.getElementById("textBox");
     let searchQuery = textBoxRef.value;
     if (searchQuery !== ""){
+        // Retrieve access token from local storage
+        let access_token = localStorage.getItem("access_token");
         
         // Execute the search
-        let searchOutput = await searchSpotify(searchQuery, g_access_token);
+        let searchOutput = await searchSpotify(searchQuery, access_token);
         console.log(searchOutput);
 
         // Display the results in the HTML
@@ -49,6 +44,5 @@ function logOut() {
     localStorage.clear();
 
     // Redirect back to login page
-    window.history.pushState("", "", "/index.html");
-    window.location.href = window.location.href;
+    window.location.href = getUrlFromPage(window.location.href, "index.html");
 }
