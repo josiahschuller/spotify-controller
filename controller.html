@@ -8,7 +8,7 @@
 		<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 	</head>
-	<body onload="onPageLoad()">
+	<body>
 		<main>
 			<div class="center">
 				<h2>Spotify Controller</h2>
@@ -16,15 +16,15 @@
 				<div id = control></div>
 				
 				<!-- Textfield with Floating Label -->
-				<form id="form" onsubmit="login(); return false;">
+				<form id="form" onsubmit="search(); return false;">
 					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 						<input class="mdl-textfield__input" type="text" id="textBox">
-						<label class="mdl-textfield__label" for="textBox" id="textBoxLabel">Password</label>
+						<label class="mdl-textfield__label" for="textBox" id="textBoxLabel">Song</label>
 					</div>
 
 					<!-- Accent-colored raised button with ripple -->
 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="button">
-						Login
+						Search
 					</button>
 				</form>
 
@@ -32,7 +32,7 @@
 			</div>
 		</main>
 		<script src="bower_components/crypto-js/crypto-js.js"></script>
-		<script src="login.js"></script>
+		<script src="controller.js"></script>
 		<script src="util/apiUtil.js"></script>
 		<script src="util/cryptoUtil.js"></script>
 	</body>

@@ -1,37 +1,50 @@
 
-// async function authorise() {
-//     // Doesn't work
-//     let scope = 'user-read-private user-read-email';
-//     let response_type = "token";
+async function authorise(client_id, uri) {
+    /*
+    Authorises user for log-in
+    */
+    let scope = 'user-read-private user-read-email';
 
-//     let url = `https://accounts.spotify.com/authorize?response_type=${response_type}&client_id=${CLIENT_ID}&scope=${scope}&redirect_uri=${REDIRECT_URI}`
-//     let headers = {
-//         "Content-Type": "application/json"
-//     };
+    let url = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${scope}&redirect_uri=${uri}&show_dialog=true`
     
-//     return getRequest(url, headers)
-// }
+    window.location.href = url;
+}
 
-// async function swapAccessForRefresh() {
-//     // Doesn't work
-//     let url = `https://api.spotify.com/v1/swap`
-//     let headers = {
-//         "Content-Type": "application/x-www-form-urlencoded"
-//     }
-//     let body = "code=BQD9QuvQ-De-AmPVe6dymJrWkrSP9hEJ7ueRTk4MEB_NpMiYfBSHD6YoIvPOQbSLZ7aRDyS8qMQgxmD5UuiaVm0CUg_1NeBFejP6IVf8HWOqDry0GA6WFTuvEaUgMQIyUOneKuGgWusX61RFitADiUREVajDkZrEp5vardYdIKX4aDNDyVvc"
+async function getTokens(code, client_id, client_secret, redirect_uri) {
+    /*
+    Requests for a new access token
+    Inputs:
+    - code (String): Code received from initial authorisation
+    - client_id (String): Client ID of Spotify user
+    - client_secret (String): Client Secret of Spotify user
+    - redirect_uri (String): URI to redirect to after authorisation
+    Output: String of new access token
+    */
+    let url = "https://accounts.spotify.com/api/token";
+    let base64 = btoa(`${client_id}:${client_secret}`);
 
-//     let response = await fetch(url, {
-//         method: "POST",
-//         headers: headers,
-//         body: body,
-//     });
+    let body = `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURI(redirect_uri)}&client_id=${client_id}&client_secret=${client_secret}`;
 
-//     let data = await response.json();
+    let headers = {
+        "Authorization": "Basic " + base64,
+        "Content-Type": "application/x-www-form-urlencoded"
+    };
 
-//     return data;
-// }
+    // Execute request
+    let response = await fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: body,
+        json: true
+    });
 
-async function refreshAccessToken(refresh_token, client_id, client_secret) {
+    let data = await response.json();
+    console.log(data);
+
+    return data;
+}
+
+async function getNewAccessToken(refresh_token, client_id, client_secret) {
     /*
     Requests for a new access token
     Inputs:
@@ -59,23 +72,9 @@ async function refreshAccessToken(refresh_token, client_id, client_secret) {
     });
 
     let data = await response.json();
-    let token = data["token_type"] + " " + data["access_token"];
+    let token = data["access_token"];
 
     return token;
-}
-
-async function getRequest(url, headers=null) {
-    /*
-    Makes a GET request
-    Inputs:
-    - url (string): url of the request
-    - headers (object): necessary headers
-    Output: object of data sent back
-    */
-    let response = await fetch(url, {headers: headers});
-
-    let data = await response.json();
-    return data;
 }
 
 async function searchSpotify(query, auth, type="track") {
@@ -92,12 +91,11 @@ async function searchSpotify(query, auth, type="track") {
     let headers = {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": auth
+        "Authorization": "Bearer " + auth
     };
-    let output;
-    await getRequest(url, headers)
-        .then((data) => {
-            output = data;
-        });
-    return output;
+
+    let response = await fetch(url, {headers: headers});
+    let data = await response.json();
+
+    return data;
 }
