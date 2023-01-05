@@ -1,4 +1,4 @@
-name: Build and Deploy content to Pages
+name: Deploy content to Pages
 
 on:
   push:
@@ -10,27 +10,8 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        
-      - name: Install dependencies
-        run: |
-          npm install -g bower
-          bower install crypto-js
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: '.'
-  
-  
   deploy:
-    needs: build
-      
+
     runs-on: ubuntu-latest
     
     environment:
@@ -38,6 +19,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
      
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
