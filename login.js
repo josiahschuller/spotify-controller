@@ -33,19 +33,18 @@ async function onPageLoad() {
         }
 
         // Redirect to controller page
-        window.location.href = "controller.html";
+        window.history.pushState("", "", "/controller.html");
+        window.location.href = window.location.href;
     }
 }
 
-async function setLocalStorage(aesKey) {
+async function setLocalStorage(client_id, client_secret) {
     /*
     Adds items to the local storage
     Inputs:
-    - aesKey (String): key for AES encryption/decryption
+    - client_id (String): Client ID for Spotify API
+    - client_secret (String): Client Secret for Spotify API
     */
-    // Decrypt encrypted keys, using the password as the AES key
-    let client_id = aesDecrypt(ENCRYPTED_ADMIN_CLIENT_ID, aesKey);
-    let client_secret = aesDecrypt(ENCRYPTED_ADMIN_CLIENT_SECRET, aesKey);
 
     // If a new user is added, clear keys from local storage
     if (localStorage.getItem("client_id") !== client_id) {
@@ -64,6 +63,10 @@ async function setLocalStorage(aesKey) {
         // Generate new access token
         let access_token = await getNewAccessToken(refresh_token, client_id, client_secret);
         localStorage.setItem("access_token", access_token);
+
+        // Redirect to controller page
+        window.history.pushState("", "", "/controller.html");
+        window.location.href = window.location.href;
     } else {
         // No refresh token, so authorization is required
         let redirect_uri = window.location.href;
@@ -71,22 +74,38 @@ async function setLocalStorage(aesKey) {
     }
 }
 
-async function login() {
+async function clientLogin() {
     /*
-    This function is called when the Login button is pressed.
+    This function is called when the Login button for Client ID and Client Secret is pressed.
     */
-    let textBoxRef = document.getElementById("textBox");
+    let clientIDBoxRef = document.getElementById("clientIDBox");
+    let clientSecretBoxRef = document.getElementById("clientSecretBox");
+    let outputRef = document.getElementById("output");
+
+    // Set up local storage
+    await setLocalStorage(clientIDBoxRef.value, clientSecretBoxRef.value);
+}
+
+async function josiahLogin() {
+    /*
+    This function is called when the Login button for Josiah's password is pressed.
+    */
+    let passwordBoxRef = document.getElementById("josiahPasswordBox");
     let outputRef = document.getElementById("output");
     
     // Authenticate password
-    let passwordGuess = textBoxRef.value;
+    let passwordGuess = passwordBoxRef.value;
     let authentication = generateHash(passwordGuess) === HASHED_PASS;
 
     if (authentication) {
         // Correct password
 
+        // Decrypt encrypted keys, using the password as the AES key
+        let client_id = aesDecrypt(ENCRYPTED_ADMIN_CLIENT_ID, passwordGuess);
+        let client_secret = aesDecrypt(ENCRYPTED_ADMIN_CLIENT_SECRET, passwordGuess);
+
         // Set up local storage
-        await setLocalStorage(passwordGuess);
+        await setLocalStorage(client_id, client_secret);
     } else {
         // Incorrect password
         outputRef.innerText = "Incorrect password";

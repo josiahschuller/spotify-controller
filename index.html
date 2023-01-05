@@ -14,14 +14,34 @@
 				<h2>Spotify Controller</h2>
 				
 				<!-- Textfield with Floating Label -->
-				<form id="form" onsubmit="login(); return false;">
+				<form onsubmit="clientLogin(); return false;">
+					<p>Login with Client ID and Client Secret:</p>
+					<p style="font-size: 14px">Add this URL (and /controller.html) as redirect URIs in API dashboard.</p>
 					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<input class="mdl-textfield__input" type="text" id="textBox">
-						<label class="mdl-textfield__label" for="textBox" id="textBoxLabel">Password</label>
-					</div>
+						<input class="mdl-textfield__input" type="text" id="clientIDBox">
+						<label class="mdl-textfield__label" for="clientIDBox" id="clientIDLabel">Client ID</label>
+					</div><br>
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						<input class="mdl-textfield__input" type="text" id="clientSecretBox">
+						<label class="mdl-textfield__label" for="clientSecretBox" id="clientSecretLabel">Client Secret</label>
+					</div><br>
 
 					<!-- Accent-colored raised button with ripple -->
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="button">
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+						Login
+					</button>
+				</form><br><br>
+				
+				<!-- Textfield with Floating Label -->
+				<form onsubmit="josiahLogin(); return false;">
+					<p>Login with Josiah's password:</p>
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						<input class="mdl-textfield__input" type="text" id="josiahPasswordBox">
+						<label class="mdl-textfield__label" for="josiahPasswordBox" id="textBoxLabel">Password</label>
+					</div><br>
+
+					<!-- Accent-colored raised button with ripple -->
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
 						Login
 					</button>
 				</form>
