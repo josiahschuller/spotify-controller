@@ -19,7 +19,7 @@ jobs:
         
       - name: Install dependencies
         run: |
-          npm install bower
+          npm install -g bower
           bower install crypto-js
 
       - name: Upload artifact
