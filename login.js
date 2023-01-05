@@ -18,7 +18,7 @@ async function onPageLoad() {
         let code = urlParams.get("code");
 
         // Clear URL
-        window.history.pushState("", "", getUrlFromPage(window.location.href, "controller.html", "/index.html?code="));
+        window.history.pushState("", "", getUrlFromPage(window.location.href, "index.html", "/index.html?code="));
         let redirect_uri = window.location.href;
 
         // Get tokens
