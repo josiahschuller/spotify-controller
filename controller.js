@@ -1,15 +1,13 @@
 
-async function convertItemsToHTML(items, auth) {
+async function convertItemsToHTML(items) {
     /*
     Converts an object of items to HTML
     Inputs:
     - items (Object): Object of items from Spotify API
-    - auth (String): access-token for Spotify API
     Output: String of HTML to display the items
     */
     let types = ["tracks"]; // Update this when the scope of types is increased
     let output = ""
-    let device_id = await getDeviceId(auth); // Get ID of active device
     for (let type in types) {
         for (let itemIndex in items[types[type]]["items"]) {
             // Extract information from object
@@ -23,7 +21,7 @@ async function convertItemsToHTML(items, auth) {
 
             // Construct HTML output
             output += `
-            <a href="javascript:addToQueueWrapper('${song_uri}', '${device_id}', '${auth}')">
+            <a href="javascript:addToQueueWrapper('${song_uri}')">
             <div class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
                     <span>${name}, by ${artists} (${duration})</span>
@@ -36,13 +34,13 @@ async function convertItemsToHTML(items, auth) {
     return output;
 }
 
-async function addToQueueWrapper(songUri, device_id, auth) {
+async function addToQueueWrapper(songUri) {
     /*
     Adds a song to the queue after checking if a device is active
     - songUri (String): URI of song to be added to queue
-    - device_id (String): ID of device to be played on
-    - auth (String): access token for Spotify API
     */
+    let auth = localStorage.getItem("access_token");
+    let device_id = await getDeviceId(auth);
     console.log(device_id);
     // Check if a device is active
     if (device_id != null && device_id != "null") {

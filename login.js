@@ -14,7 +14,7 @@ async function onPageLoad() {
         let client_id = localStorage.getItem("client_id");
         let client_secret = localStorage.getItem("client_secret");
         // Get code from URL
-        const urlParams = new URLSearchParams(window.location.search);
+        let urlParams = new URLSearchParams(window.location.search);
         let code = urlParams.get("code");
 
         // Clear URL
@@ -79,7 +79,6 @@ async function clientLogin() {
     */
     let clientIDBoxRef = document.getElementById("clientIDBox");
     let clientSecretBoxRef = document.getElementById("clientSecretBox");
-    let outputRef = document.getElementById("output");
 
     // Set up local storage
     await setLocalStorage(clientIDBoxRef.value, clientSecretBoxRef.value);
@@ -90,7 +89,6 @@ async function josiahLogin() {
     This function is called when the Login button for Josiah's password is pressed.
     */
     let passwordBoxRef = document.getElementById("josiahPasswordBox");
-    let outputRef = document.getElementById("output");
     
     // Authenticate password
     let passwordGuess = passwordBoxRef.value;
