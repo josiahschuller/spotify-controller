@@ -9,7 +9,7 @@ function extractSongInfo(song) {
     let name = song["name"];
     let artists = song["artists"].map(artist => artist["name"]).join(", ");
     let duration = convertMsToTime(song["duration_ms"]);
-    return `${name}, by ${artists} (${duration})`;
+    return `"${name}", by ${artists} (${duration})`;
 }
 
 async function convertItemsToHTML(items) {
@@ -51,7 +51,7 @@ async function addToQueueWrapper(songUri) {
     */
     let auth = localStorage.getItem("access_token");
     let device_id = await getDeviceId(auth);
-    console.log(device_id);
+    
     // Check if a device is active
     if (device_id != null && device_id != "null") {
         // A device is active
@@ -109,26 +109,45 @@ async function displayCurrentPlayback() {
     /*
     Displays the current playback state in the HTML
     */
-    let auth = localStorage.getItem("access_token");
+    let access_token = localStorage.getItem("access_token");
     let market = "AU";
 
     let output = "";
 
     let stateData;
     try {
-        // Device is playing
-        stateData = await getPlaybackInformation(auth, market);
-        if (stateData["is_playing"]) {
-            // Extract information from object
-            output = `Currently playing: ${extractSongInfo(stateData["item"])}`;
+        stateData = await getPlaybackInformation(access_token, market);
+        if ("error" in stateData) {
+            throw new Exception();
+        }
+        if (stateData === undefined) {
+            // No devices with Spotify open
+            output = "No device has Spotify open. Try again later.";
         } else {
-            output = "No song is currently being played. Come back later.";
+            // There is a device with Spotify open
+            if (stateData["is_playing"]) {
+                // Song is playing on the device
+                // Extract information from object
+                output = `Currently playing: ${extractSongInfo(stateData["item"])}`;
+            } else {
+                // No song is playing on the device
+                output = "No song is currently playing.";
+            }
         }
     } catch {
-        // No device is playing
-        stateData = {}
-        output = "No song is currently being played. Come back later.";
+        // If request fails, renew access token
+        let refresh_token = localStorage.getItem("refresh_token");
+        let client_id = localStorage.getItem("client_id");
+        let client_secret = localStorage.getItem("client_secret");
+
+        access_token = await getNewAccessToken(refresh_token, client_id, client_secret);
+        localStorage.setItem("access_token", access_token);
+
+        // Try again
+        stateData = await getPlaybackInformation(access_token, market);
+        console.log(stateData);
     }
-    console.log(stateData);
     document.getElementById("control").innerHTML = `<p>${output}</p>`;
 }
+
+setInterval(displayCurrentPlayback, 5000);

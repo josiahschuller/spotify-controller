@@ -35,7 +35,8 @@ async function authorise(client_id, uri) {
     /*
     Authorises user for log-in
     */
-    let scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming';
+    let scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state';
+    // let scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming';
 
     let url = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${scope}&redirect_uri=${uri}&show_dialog=true`
     
@@ -159,7 +160,6 @@ async function getDeviceId(auth) {
     let device_id = null;
 
     let url = "https://api.spotify.com/v1/me/player/devices";
-
     let headers = {
         "Accept": "application/json",
         "Content-Type": "application/json",
@@ -188,6 +188,7 @@ async function getDeviceId(auth) {
 async function addToQueue(songUri, device_id, auth) {
     /*
     Adds a song to the queue
+    Inputs:
     - songUri (String): URI of song to be added to queue
     - device_id (String): ID of device to be played on
     - auth (String): access token for Spotify API
@@ -201,8 +202,6 @@ async function addToQueue(songUri, device_id, auth) {
     
     let response = await fetch(url, {headers: headers, method: "POST"});
     let data = await response.json();
-
-    console.log(data);
 }
 
 async function getPlaybackInformation(auth, market) {
