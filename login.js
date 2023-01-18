@@ -1,7 +1,8 @@
 
-const HASHED_PASS = "YL1lGNH2jaDFVAPTNXp8Z/yoXpu/5xsbwrHASsbkZuQ=";
-const ENCRYPTED_ADMIN_CLIENT_ID = "U2FsdGVkX1+Cw9T4nNXC9cJr5+OeygEPOw+Ulr5A9K0ERFaaGl5grQp4aiklMaHsL7vkq7azTMhOV4syasBPRQ==";
-const ENCRYPTED_ADMIN_CLIENT_SECRET = "U2FsdGVkX189vxEJWKZ1FS7RLlk9wb13H5PAcprOt3PzbQgxWV0uu5rsrulfUCPVlrvDxw78EyhHuRkMI4yP1Q==";
+const HASHED_JOSIAH_PASSWORD = "YL1lGNH2jaDFVAPTNXp8Z/yoXpu/5xsbwrHASsbkZuQ=";
+const ENCRYPTED_JOSIAH_CLIENT_ID = "U2FsdGVkX1+Cw9T4nNXC9cJr5+OeygEPOw+Ulr5A9K0ERFaaGl5grQp4aiklMaHsL7vkq7azTMhOV4syasBPRQ==";
+const ENCRYPTED_JOSIAH_CLIENT_SECRET = "U2FsdGVkX189vxEJWKZ1FS7RLlk9wb13H5PAcprOt3PzbQgxWV0uu5rsrulfUCPVlrvDxw78EyhHuRkMI4yP1Q==";
+const ENCRYPTED_JOSIAH_REFRESH_TOKEN = "U2FsdGVkX1+7663EbEqGuYDvBsPpOVE9kyscalDbEVzsPvcdaSADo5mzSbquoOp6JWWIMG1Qw3z0ZpwCOcEFu05Ozk0T3imx/cCkWE8+UtQyC41GtwnhoTO5gi8DKIQF3XRra7hexIH3bsIoCzogN2wmFVbyMKqzKBEiDCq9bKeno55LNt1i8Tmq77u3bUnb";
 
 async function onPageLoad() {
     /*
@@ -38,12 +39,13 @@ async function onPageLoad() {
     }
 }
 
-async function setLocalStorage(client_id, client_secret) {
+async function setLocalStorage(client_id, client_secret, refresh_token = null) {
     /*
     Adds items to the local storage
     Inputs:
     - client_id (String): Client ID for Spotify API
     - client_secret (String): Client Secret for Spotify API
+    - refresh_token (String): Refresh Token for Spotify API
     */
 
     // If a new user is added, clear keys from local storage
@@ -55,6 +57,11 @@ async function setLocalStorage(client_id, client_secret) {
     // Put Client ID and Secret into local storage
     localStorage.setItem("client_id", client_id);
     localStorage.setItem("client_secret", client_secret);
+
+    // Put Refresh Token into local storage if given
+    if (refresh_token !== null) {
+        localStorage.setItem("refresh_token", refresh_token);
+    }
 
     // Check if a refresh token exists in local storage
     if (localStorage.getItem("refresh_token") !== null) {
@@ -92,17 +99,18 @@ async function josiahLogin() {
     
     // Authenticate password
     let passwordGuess = passwordBoxRef.value;
-    let authentication = generateHash(passwordGuess) === HASHED_PASS;
+    let authentication = generateHash(passwordGuess) === HASHED_JOSIAH_PASSWORD;
 
     if (authentication) {
         // Correct password
 
         // Decrypt encrypted keys, using the password as the AES key
-        let client_id = aesDecrypt(ENCRYPTED_ADMIN_CLIENT_ID, passwordGuess);
-        let client_secret = aesDecrypt(ENCRYPTED_ADMIN_CLIENT_SECRET, passwordGuess);
+        let client_id = aesDecrypt(ENCRYPTED_JOSIAH_CLIENT_ID, passwordGuess);
+        let client_secret = aesDecrypt(ENCRYPTED_JOSIAH_CLIENT_SECRET, passwordGuess);
+        let refresh_token = aesDecrypt(ENCRYPTED_JOSIAH_REFRESH_TOKEN, passwordGuess);
 
         // Set up local storage
-        await setLocalStorage(client_id, client_secret);
+        await setLocalStorage(client_id, client_secret, refresh_token);
     } else {
         // Incorrect password
         displayToast("Incorrect password");
