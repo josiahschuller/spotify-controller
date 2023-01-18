@@ -1,8 +1,7 @@
 name: Build and Deploy content to Pages
 
 on:
-  push:
-    branches: ["main"]
+  push
 
 permissions:
   contents: write
