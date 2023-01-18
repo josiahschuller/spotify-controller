@@ -111,43 +111,40 @@ async function displayCurrentPlayback() {
     */
     let access_token = localStorage.getItem("access_token");
     let market = "AU";
-
     let output = "";
 
-    let stateData;
-    try {
-        stateData = await getPlaybackInformation(access_token, market);
-        if ("error" in stateData) {
-            throw new Exception();
-        }
-        if (stateData === undefined) {
-            // No devices with Spotify open
-            output = "No device has Spotify open. Try again later.";
-        } else {
-            // There is a device with Spotify open
-            if (stateData["is_playing"]) {
-                // Song is playing on the device
-                // Extract information from object
-                output = `Currently playing: ${extractSongInfo(stateData["item"])}`;
-            } else {
-                // No song is playing on the device
-                output = "No song is currently playing.";
-            }
-        }
-    } catch {
+    let stateData = await getPlaybackInformation(access_token, market);
+    if ("error" in stateData) {
         // If request fails, renew access token
         let refresh_token = localStorage.getItem("refresh_token");
         let client_id = localStorage.getItem("client_id");
         let client_secret = localStorage.getItem("client_secret");
 
         access_token = await getNewAccessToken(refresh_token, client_id, client_secret);
+        console.log(`New access token: ${access_token}`)
         localStorage.setItem("access_token", access_token);
 
         // Try again
         stateData = await getPlaybackInformation(access_token, market);
         console.log(stateData);
     }
+
+    if (stateData === undefined) {
+        // No devices with Spotify open
+        output = "No device has Spotify open. Try again later.";
+    } else {
+        // There is a device with Spotify open
+        if (stateData["is_playing"]) {
+            // Song is playing on the device
+            // Extract information from object
+            output = `Currently playing: ${extractSongInfo(stateData["item"])}`;
+        } else {
+            // No song is playing on the device
+            output = "No song is currently playing.";
+        }
+    }
+    
     document.getElementById("control").innerHTML = `<p>${output}</p>`;
 }
 
-setInterval(displayCurrentPlayback, 5000);
+setInterval(displayCurrentPlayback, 10000);

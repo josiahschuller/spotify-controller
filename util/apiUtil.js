@@ -169,6 +169,8 @@ async function getDeviceId(auth) {
     let response = await fetch(url, {headers: headers});
     let data = await response.json();
 
+    console.log(data);
+
     // Find the active device (device in use)
     for (let i = 0; i < data["devices"].length; i++) {
         let device = data["devices"][i];
@@ -212,11 +214,12 @@ async function getPlaybackInformation(auth, market) {
     - market (String): ISO 3166-1 alpha-2 country code
     Output: ?
     */
-    let url = `https://api.spotify.com/v1/me/player?market=${market}`;
+    let url = `https://api.spotify.com/v1/me/player/currently-playing?market=${market}`;
     
     let headers = {
-        "Authorization": "Bearer " + auth,
-        "Content-Type": "application/json"
+        // "Accept": "application/json",
+        // "Content-Type": "application/json",
+        "Authorization": "Bearer " + auth
     }
     let response = await fetch(url, {
         headers: headers,
