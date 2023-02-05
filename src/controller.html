@@ -15,21 +15,17 @@
 
 				
 				<div style="text-align:center">
-					<div class="oneline">
-						<h2 style="text-align:center">Spotify Controller</h2>
-					</div>
-					<div class="oneline">
-						<form onsubmit="logOut(); return false;">
-							<!-- Accent-colored raised button with ripple -->
-							<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-								Logout
-							</button>
-						</form>
-					</div>
+					<h2 style="text-align:center">Spotify Controller</h2>
 				</div>
+				
+				<form onsubmit="logOut(); return false;">
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+						Logout
+					</button>
+				</form><br>
 
 				<div id = control></div>
-				
+
 				<!-- Textfield with Floating Label -->
 				<form id="form" onsubmit="search(); return false;" style="text-align:center">
 					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">

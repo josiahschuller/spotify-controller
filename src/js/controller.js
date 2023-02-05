@@ -9,7 +9,7 @@ function extractSongInfo(song) {
     let name = song["name"];
     let artists = song["artists"].map(artist => artist["name"]).join(", ");
     let duration = convertMsToTime(song["duration_ms"]);
-    return `"${name}", by ${artists} (${duration})`;
+    return `${name}  |  ${artists}  |  ${duration}`;
 }
 
 async function convertItemsToHTML(items) {
@@ -31,10 +31,10 @@ async function convertItemsToHTML(items) {
 
             // Construct HTML output
             output += `
-            <a href="javascript:addToQueueWrapper('${song_uri}')">
-            <div class="mdl-list__item">
+            <a style="text-decoration: none;" href="javascript:addToQueueWrapper('${song_uri}')">
+            <div class="mdl-list__item song">
                 <span class="mdl-list__item-primary-content">
-                    <span>${extractSongInfo(item)}</span>
+                    <span">${extractSongInfo(item)}</span>
                 </span>
                 <i class="material-icons">add</i>
             </div>
@@ -59,7 +59,7 @@ async function addToQueueWrapper(songUri) {
         await addToQueue(songUri, device_id, auth);
     } else {
         // No devices are active
-        displayToast("No devices playing at the moment");
+        displayToast("No available devices");
     }
 }
 
@@ -113,25 +113,34 @@ async function displayCurrentPlayback() {
     let market = "AU";
     let output = "";
 
-    let stateData = await getPlaybackInformation(access_token, market);
-    if ("error" in stateData) {
-        // If request fails, renew access token
-        let refresh_token = localStorage.getItem("refresh_token");
-        let client_id = localStorage.getItem("client_id");
-        let client_secret = localStorage.getItem("client_secret");
-
-        access_token = await getNewAccessToken(refresh_token, client_id, client_secret);
-        console.log(`New access token: ${access_token}`)
-        localStorage.setItem("access_token", access_token);
-
-        // Try again
+    let stateData;
+    try {
         stateData = await getPlaybackInformation(access_token, market);
-        console.log(stateData);
+        if ("error" in stateData) {
+            // If request fails, renew access token
+            let refresh_token = localStorage.getItem("refresh_token");
+            let client_id = localStorage.getItem("client_id");
+            let client_secret = localStorage.getItem("client_secret");
+
+            access_token = await getNewAccessToken(refresh_token, client_id, client_secret);
+            console.log(`New access token: ${access_token}`)
+            localStorage.setItem("access_token", access_token);
+
+            // Try again
+            stateData = await getPlaybackInformation(access_token, market);
+            console.log(stateData);
+        }
+
+    } catch (exception) {
+        if (exception instanceof SyntaxError) {
+            console.log("No device has Spotify open. See syntax error below:");
+        }
+        console.log(exception);
     }
 
-    if (stateData === undefined) {
+    if (stateData == null) {
         // No devices with Spotify open
-        output = "No device has Spotify open. Try again later.";
+        output = "No available devices. Play a song on your device and try again.";
     } else {
         // There is a device with Spotify open
         if (stateData["is_playing"]) {
@@ -140,7 +149,7 @@ async function displayCurrentPlayback() {
             output = `Currently playing: ${extractSongInfo(stateData["item"])}`;
         } else {
             // No song is playing on the device
-            output = "No song is currently playing.";
+            output = "Device available. No song is currently playing.";
         }
     }
     

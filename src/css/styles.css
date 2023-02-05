@@ -19,6 +19,14 @@ p {
     font-size: 16px;
 }
 
+.song {
+    border:1px solid black;
+}
+.song:hover{
+    background-color: rgb(255, 154, 174);
+    cursor:pointer;
+}
+
 * {
     font-family: Helvetica
 }
