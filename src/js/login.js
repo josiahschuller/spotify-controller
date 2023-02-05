@@ -2,6 +2,7 @@
 const HASHED_JOSIAH_PASSWORD = "YL1lGNH2jaDFVAPTNXp8Z/yoXpu/5xsbwrHASsbkZuQ=";
 const ENCRYPTED_JOSIAH_CLIENT_ID = "U2FsdGVkX1+Cw9T4nNXC9cJr5+OeygEPOw+Ulr5A9K0ERFaaGl5grQp4aiklMaHsL7vkq7azTMhOV4syasBPRQ==";
 const ENCRYPTED_JOSIAH_CLIENT_SECRET = "U2FsdGVkX189vxEJWKZ1FS7RLlk9wb13H5PAcprOt3PzbQgxWV0uu5rsrulfUCPVlrvDxw78EyhHuRkMI4yP1Q==";
+const ENCRYPTED_JOSIAH_REFRESH_TOKEN = "U2FsdGVkX1/5ZjwstEbch4D48Oa4ilkCN322OiC82M9gQmL7c9JE7O/S30GPOM81VbJ6o4A+fhFiXGP4iSG0Ci5C7HU/wsC4QEnUE5Hk02lu6nLfBh4QW/xdK2v2lTVM9WmTvVlMnVYLrLHVs3XVkwtg4zXVqmt2XSLqaaKkHdOMAAiLa2KRclLD6Qi3fZ8JPTucpTa/J5+1z6/E9+DDLQ==";
 
 async function onPageLoad() {
     /*
@@ -100,12 +101,22 @@ async function josiahLogin() {
     if (authentication) {
         // Correct password
 
-        // Decrypt encrypted keys, using the password as the AES key
+        // Decrypt encrypted API keys, using the password as the AES key
         let client_id = aesDecrypt(ENCRYPTED_JOSIAH_CLIENT_ID, passwordGuess);
         let client_secret = aesDecrypt(ENCRYPTED_JOSIAH_CLIENT_SECRET, passwordGuess);
+        let refresh_token = aesDecrypt(ENCRYPTED_JOSIAH_REFRESH_TOKEN, passwordGuess);
+
+        // Get new access token
+        let access_token = await getNewAccessToken(refresh_token, client_id, client_secret);
 
         // Set up local storage
-        await setLocalStorage(client_id, client_secret);
+        localStorage.setItem("client_id", client_id);
+        localStorage.setItem("client_secret", client_secret);
+        localStorage.setItem("refresh_token", refresh_token);
+        localStorage.setItem("access_token", access_token);
+
+        // Redirect to controller page
+        window.location.href = getUrlFromPage(window.location.href, "controller.html");
     } else {
         // Incorrect password
         displayToast("Incorrect password");
