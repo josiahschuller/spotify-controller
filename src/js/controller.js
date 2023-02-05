@@ -28,26 +28,32 @@ async function convertItemsToHTML(items) {
 
             // Setup information for adding song to queue
             let song_uri = item["uri"];
-
-            // Construct HTML output
             output += `
-            <a style="text-decoration: none;" href="javascript:addToQueueWrapper('${song_uri}')">
             <div class="mdl-list__item song">
                 <span class="mdl-list__item-primary-content">
-                    <span">${extractSongInfo(item)}</span>
+                    <a style="text-decoration: none;" href="javascript:playWrapper('${song_uri}', true);">
+                        <span">${extractSongInfo(item)}</span>
+                    </a>
                 </span>
-                <i class="material-icons">add</i>
-            </div>
-            </a><br>`;
+                <a style="text-decoration: none;" href="javascript:playWrapper('${song_uri}', true);">
+                    <i class="material-icons">play_arrow</i>
+                </a>
+                <span>&nbsp;&nbsp;</span>
+                <a style="text-decoration: none;" href="javascript:playWrapper('${song_uri}', false);">
+                    <i class="material-icons">add</i>
+                </a>
+            </div><br>`;
         }
     }
     return output;
 }
 
-async function addToQueueWrapper(songUri) {
+async function playWrapper(songUri, playNow) {
     /*
-    Adds a song to the queue after checking if a device is active
+    Plays a song or adds a song to the queue after checking if a device is active
+    Inputs:
     - songUri (String): URI of song to be added to queue
+    - playNow (Boolean): Whether to play now instead of adding to the queue
     */
     let auth = localStorage.getItem("access_token");
     let device_id = await getDeviceId(auth);
@@ -55,12 +61,31 @@ async function addToQueueWrapper(songUri) {
     // Check if a device is active
     if (device_id != null && device_id != "null") {
         // A device is active
-        displayToast("Song added to queue");
-        await addToQueue(songUri, device_id, auth);
+        if (playNow) {
+            displayToast("Song playing now");
+            await playSong(songUri, auth);
+        } else {
+            displayToast("Song added to queue");
+            await addToQueue(songUri, device_id, auth);
+        }
     } else {
         // No devices are active
         displayToast("No available devices");
     }
+    displayCurrentPlayback();
+}
+
+async function pauseWrapper() {
+    /*
+    Pauses the playback
+    */
+    let auth = localStorage.getItem("access_token");
+    await pausePlayback(auth);
+
+    // Display toast
+    displayToast("Playback paused");
+
+    displayCurrentPlayback();
 }
 
 async function search() {
@@ -139,6 +164,7 @@ async function displayCurrentPlayback() {
         }
     }
 
+    let moreHTML = "";
     if (stateData == null) {
         // No devices with Spotify open
         output = "No available devices. Play a song on your device and try again.";
@@ -148,13 +174,33 @@ async function displayCurrentPlayback() {
             // Song is playing on the device
             // Extract information from object
             output = `Currently playing: ${extractSongInfo(stateData["item"])}`;
+
+            // Add pause button
+            moreHTML += `
+            <a class="floater" style="text-decoration: none;" href="javascript:pauseWrapper();">
+                <i class="material-icons">pause</i>
+            </a>
+            `;
         } else {
             // No song is playing on the device
-            output = "Device available. No song is currently playing.";
+            output = "Device available. No song playing.";
+
+            // Add play button
+            moreHTML += `
+            <a class="floater" style="text-decoration: none;" href="javascript:playWrapper('', true);">
+                <i class="material-icons">play_arrow</i>
+            </a>
+            `;
         }
     }
     
-    document.getElementById("control").innerHTML = `<p>${output}</p>`;
+    document.getElementById("control").innerHTML = `
+    <div class="float-box">
+        <p class="floater">${output}</p>
+        <span>&nbsp;&nbsp;</span>
+        ${moreHTML}
+    </div>
+    `;
 }
 
 setInterval(displayCurrentPlayback, 10000);

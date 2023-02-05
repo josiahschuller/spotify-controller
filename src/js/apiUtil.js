@@ -187,6 +187,51 @@ async function getDeviceId(auth) {
     return device_id;
 }
 
+async function playSong(songUri, auth) {
+    /*
+    Plays a song
+    Inputs:
+    - songUri (String): URI of song to be played
+    - auth (String): access token for Spotify API
+    */
+    let url = `https://api.spotify.com/v1/me/player/play`;
+    let headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + auth
+    }
+    let body;
+    if (songUri == "") {
+        body = null;
+    } else {
+        body = JSON.stringify({
+            "uris": [songUri]
+        });
+    }
+    await fetch(url, {
+        headers: headers,
+        method: "PUT",
+        body: body
+    });
+}
+
+async function pausePlayback(auth) {
+    /*
+    Plays a song
+    Inputs:
+    - auth (String): access token for Spotify API
+    */
+    let url = `https://api.spotify.com/v1/me/player/pause`;
+    let headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + auth
+    }
+    await fetch(url, {
+        headers: headers,
+        method: "PUT",
+    });
+}
+
 async function addToQueue(songUri, device_id, auth) {
     /*
     Adds a song to the queue
@@ -201,9 +246,7 @@ async function addToQueue(songUri, device_id, auth) {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + auth
     }
-    
-    let response = await fetch(url, {headers: headers, method: "POST"});
-    let data = await response.json();
+    await fetch(url, {headers: headers, method: "POST"});
 }
 
 async function getPlaybackInformation(auth, market) {

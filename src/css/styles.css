@@ -5,28 +5,32 @@ body {
 .main {
     margin: auto;
     max-width: 700px;
-    padding: 10px;
     text-align: center;
-}
-
-.oneline {
-    display: inline-block;
-    text-align: center;
-    margin: 1%;
 }
 
 p {
     font-size: 16px;
 }
 
+* {
+    font-family: Helvetica;
+    color: rgb(0, 0, 0)
+}
+
+li {
+    border:1px solid black;
+}
+
 .song {
     border:1px solid black;
 }
+
 .song:hover{
     background-color: rgb(255, 154, 174);
     cursor:pointer;
 }
 
-* {
-    font-family: Helvetica
+.float-box {
+    display: flex;
+    justify-content: center;
 }
