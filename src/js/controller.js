@@ -132,10 +132,11 @@ async function displayCurrentPlayback() {
         }
 
     } catch (exception) {
-        if (exception instanceof SyntaxError) {
-            console.log("No device has Spotify open. See syntax error below:");
+        if (exception instanceof SyntaxError && exception.message === "Unexpected end of JSON input") {
+            console.log("No device is available (open Spotify on your device and play a track).");
+        } else {
+            console.log(exception);
         }
-        console.log(exception);
     }
 
     if (stateData == null) {

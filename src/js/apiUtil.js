@@ -95,7 +95,7 @@ async function getNewAccessToken(refresh_token, client_id, client_secret) {
         "Content-Type": "application/x-www-form-urlencoded"
     };
 
-    let body = `grant_type=client_credentials&refresh_token=${refresh_token}`
+    let body = `grant_type=refresh_token&refresh_token=${refresh_token}`
 
     let response = await fetch(url, {
         method: "POST",
