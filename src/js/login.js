@@ -49,16 +49,10 @@ async function onPageLoad() {
     }
 }
 
-async function clientLogin() {
+async function spotifyLogin() {
     /*
-    Adds items to the local storage
-    Inputs:
-    - client_id (String): Client ID for Spotify API
-    - client_secret (String): Client Secret for Spotify API
+    This function is called when the "Login with Spotify" button is pressed.
     */
-
-    // If a new user is added, clear keys from local storage
-
     // Put Client ID and Secret into local storage
     localStorage.setItem("client_id", CLIENT_ID);
     localStorage.setItem("client_secret", CLIENT_SECRET);

@@ -4,9 +4,7 @@ Goal: Control my Spotify through a website.
 
 The site can be found [here](https://josiahschuller.github.io/spotify-controller/src/index.html).
 
-You can log-in using your Client ID and Client Secret. Don't forget to add `https://josiahschuller.github.io/spotify-controller/src/index.html` and `https://josiahschuller.github.io/spotify-controller/src/controller.html` as redirect URIs in your Spotify API dashboard.
-
-Alternatively, you can log-in to my account using my password.
+You can log-in using your own Spotify account or, if you know my password, you can log-in to my account.
 
 To run the code locally:
 1. Install dependencies
@@ -15,4 +13,4 @@ To run the code locally:
     
     `bower install crypto-js`
 
-2. Open `index.html`
+2. Open `src/index.html`
